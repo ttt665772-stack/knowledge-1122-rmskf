@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>家庭网络卡顿的排查顺序</title>
+<meta name="description" content="网络排查 的实用经验：包含具体步骤、数字参考与常见错误，约 2000 字。">
+<meta name="keywords" content="网络排查,步骤,实用经验,步骤">
+<link rel="canonical" href="">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "headline": "家庭网络卡顿的排查顺序", "description": "网络排查 的实用经验整理，包含具体做法与常见错误。", "author": {"@type": "Person", "name": "编辑部"}, "datePublished": "2026-11-22", "inLanguage": "zh-CN"}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "问：网页打不开但微信能发消息，是什么问题？", "acceptedAnswer": {"@type": "Answer", "text": "典型 DNS 或 HTTP 端口问题。微信走自有长连接和 IP 直连，对域名解析依赖低。先改 DNS 为 223.5.5.5 测试，仍失败则检查代理设置和安全软件是否拦截了 80/443 端口。"}}, {"@type": "Question", "name": "问：路由器指示灯全部正常，为什么还是上不了网？", "acceptedAnswer": {"@type": "Answer", "text": "指示灯只反映物理链路，不反映拨号状态和账号余额。登录路由器管理页查看 WAN 状态，若显示“已连接但无流量”，多为宽带欠费、账号被顶下线或运营商侧端口绑定异常，可拨打运营商客服查询线路状态。"}}, {"@type": "Question", "name": "问：每天固定时段卡顿，需要换设备吗？", "acceptedAnswer": {"@type": "Answer", "text": "先别换。固定时段多为晚高峰 20:00 至 23:00 的运营商拥塞，或邻居集中使用造成信道干扰。记录 3 天的卡顿时段和测速数据，若延迟升高但带宽达标，属于拥塞而非设备故障，调整信道或错峰使用即可；若带宽同步跌到签约值的 30% 以下，再考虑报修或升级套餐。"}}]}]}</script>
+<style>
+body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;max-width:820px;margin:40px auto;padding:0 20px;line-height:1.9;color:#1f2328}
+h1{font-size:28px;line-height:1.4}h2{font-size:21px;margin-top:34px;border-left:4px solid #0b62d6;padding-left:10px}
+h3{font-size:17px;margin-top:22px}ul,ol{padding-left:24px}a{color:#0b62d6;text-decoration:none}a:hover{text-decoration:underline}
+.toc{background:#f6f8fa;border:1px solid #e5e7eb;padding:12px 18px;border-radius:8px;font-size:14px}
+footer{margin-top:44px;border-top:1px solid #eee;padding-top:16px;font-size:14px;color:#57606a}
+</style>
+</head>
+<body>
+<h1>家庭网络卡顿的排查顺序</h1>
+<div class="toc"><strong>目录</strong><br>一、问题与目标　二、具体做法　三、常见错误　四、效果判断　五、常见问题</div>
+<h2>网络排查：从“连不上”到“跑得稳”的 6 步法</h2>
+<p>网络故障最消耗人的地方，不是技术难度，而是没有顺序：一会儿重启路由器，一会儿改 DNS，半小时过去仍不知道问题在哪一层。按固定步骤排查，能把 80% 的常见故障压缩在 15 分钟内定位。下面这套流程按“物理层到应用层”推进，每一步都有可执行动作和判断标准，适合家庭宽带、小型办公室和远程办公场景。</p>
+
+<h2>第 1 步：先确认故障范围，别急着动设备</h2>
+<p><strong>耗时目标：3 分钟内。</strong>先回答三个问题：是一台设备还是所有设备？是有线还是无线？是全部网站打不开，还是只有某个应用异常？三个答案基本能把排查范围缩小一半。</p>
+<p>操作顺序：</p>
+<ul>
+<li><strong>步骤 1：</strong>用手机流量打开同一个应用，能正常使用说明服务端没问题，故障在本地网络。</li>
+<li><strong>步骤 2：</strong>同一路由器下换一台设备测试，两台都失败则问题在路由器或上游，仅一台失败则问题在该设备。</li>
+<li><strong>步骤 3：</strong>有线设备正常、无线设备异常，直接跳到无线排查，不必检查光猫和运营商。</li>
+</ul>
+<p><strong>常见错误：</strong>一上来就重启光猫。重启会让拨号日志和错误码消失，反而丢失最有价值的线索。除非确认设备死机，否则先看指示灯和错误提示再动手。</p>
+
+<h2>第 2 步：看物理连接与指示灯，排除 40% 的硬故障</h2>
+<p><strong>耗时目标：5 分钟内。</strong>统计显示，家庭和小型办公网络中约 40% 的“断网”来自网线松动、光衰过大、电源适配器老化这类物理问题，而不是配置错误。</p>
+<p>检查清单：</p>
+<ul>
+<li><strong>光猫：</strong>PON 灯常亮为正常，闪烁说明光路未注册；LOS 灯红灯表示光信号丢失，需报修，自行重启无效。</li>
+<li><strong>路由器：</strong>WAN 口灯不亮，先换一根网线；LAN 口灯不亮，检查终端网卡是否被禁用。</li>
+<li><strong>网线：</strong>超五类线在 100 米内可跑千兆，但劣质线在 30 米后就可能掉速到 100Mbps 以下，实测速率长期低于签约带宽的 60% 时应更换。</li>
+</ul>
+<p><strong>常见错误：</strong>把路由器放在弱电箱金属门内。金属屏蔽可使 2.4GHz 信号衰减 10dB 以上，相当于把覆盖半径砍掉一半，表现为“客厅满格、卧室断流”。</p>
+
+<h2>第 3 步：分层测试连通性，用 4 条命令定位断点</h2>
+<p><strong>耗时目标：8 分钟内。</strong>不要靠“打开网页试试”，按顺序执行以下命令，每一条的结果都指向不同层。</p>
+<ul>
+<li><strong>步骤 1：</strong>查看本机地址，确认拿到的是 192.168.x.x 或 10.x.x.x 这类内网地址。出现 169.254.x.x 说明 DHCP 失败，问题在路由器分配或网线。</li>
+<li><strong>步骤 2：</strong>ping 网关。超时说明本机到路由器不通，检查无线连接、网卡驱动或 IP 冲突。</li>
+<li><strong>步骤 3：</strong>ping 公网地址（如 223.5.5.5）。网关通但公网不通，问题在路由器拨号、光猫桥接或运营商线路。</li>
+<li><strong>步骤 4：</strong>解析域名。公网 IP 能通但域名打不开，属于 DNS 故障，把 DNS 改为 223.5.5.5 或 119.29.29.29 后重试。</li>
+</ul>
+<p><strong>常见错误：</strong>只看“能 ping 通”就判定网络正常。ping 走 ICMP，不经过代理和端口限制，网页打不开但 ping 正常，往往是对应端口被防火墙或安全软件拦截。</p>
+
+<h2>第 4 步：无线与性能排查，解决“能连但慢”</h2>
+<p><strong>耗时目标：10 分钟内。</strong>“连上了但卡”比“完全断网”更常见，排查重点从连通性转向干扰、信道和带宽分配。</p>
+<p>执行顺序：</p>
+<ul>
+<li><strong>步骤 1：</strong>测速。有线直连光猫测一次，无线测一次。有线达标、无线不足签约带宽 50%，问题在无线侧。</li>
+<li><strong>步骤 2：</strong>看频段。2.4GHz 在密集住宅区可搜到 20 个以上邻居信号，干扰严重；5GHz 穿墙弱但速率高，两者应分设不同名称，避免终端粘在弱信号上。</li>
+<li><strong>步骤 3：</strong>看信道。2.4GHz 只用 1、6、11 三个互不重叠信道；5GHz 优先选 149 以上高频段，减少与雷达信道的冲突。</li>
+<li><strong>步骤 4：</strong>查占用。单台设备下载可占满上行，导致全屋延迟从 10ms 升到 300ms 以上，路由器 QoS 里给视频会议设备限速或提优先级即可缓解。</li>
+</ul>
+<p><strong>金额参考：</strong>百元级路由器在 100 平方米户型、20 台设备场景下容易出现内存耗尽重启；升级到 300 至 600 元档的 Wi-Fi 6 设备通常能显著改善。若面积超过 120 平方米或有承重墙阻隔，加一台 200 至 400 元的 Mesh 节点比换旗舰单机更有效。</p>
+
+<h2>第 5 步：记录与复盘，让同类故障第二次只需 3 分钟</h2>
+<p><strong>耗时目标：5 分钟内。</strong>每次排查结束，记录四项信息：发生时间、故障现象、定位到的层级、解决动作。连续记录 3 次以上，就能看出规律。</p>
+<p>判断标准：同一现象一个月内出现 2 次以上，说明是配置或硬件隐患，而不是偶发波动。光猫频繁掉线且 LOS 灯闪红，属于线路质量问题，应要求运营商检测光衰，正常值应优于 -27dBm。路由器每 7 天重启一次属于治标，若内存占用在 48 小时内涨到 90% 以上，应考虑更换设备或关闭不必要的插件。</p>
+<p><strong>常见错误：</strong>只记“重启后好了”。没有记录层级，下次仍要从头排查；写明“DHCP 地址池耗尽，扩容至 200 个地址”，下次直接命中。</p>
+
+<h2>常见问题</h2>
+<h3>问：网页打不开但微信能发消息，是什么问题？</h3>
+<p>典型 DNS 或 HTTP 端口问题。微信走自有长连接和 IP 直连，对域名解析依赖低。先改 DNS 为 223.5.5.5 测试，仍失败则检查代理设置和安全软件是否拦截了 80/443 端口。</p>
+<h3>问：路由器指示灯全部正常，为什么还是上不了网？</h3>
+<p>指示灯只反映物理链路，不反映拨号状态和账号余额。登录路由器管理页查看 WAN 状态，若显示“已连接但无流量”，多为宽带欠费、账号被顶下线或运营商侧端口绑定异常，可拨打运营商客服查询线路状态。</p>
+<h3>问：每天固定时段卡顿，需要换设备吗？</h3>
+<p>先别换。固定时段多为晚高峰 20:00 至 23:00 的运营商拥塞，或邻居集中使用造成信道干扰。记录 3 天的卡顿时段和测速数据，若延迟升高但带宽达标，属于拥塞而非设备故障，调整信道或错峰使用即可；若带宽同步跌到签约值的 30% 以下，再考虑报修或升级套餐。</p>
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://tvrizhilian.zhibozh-mgtv.com.cn/">tvrizhilian.zhibozh-mgtv.com.cn</a></li>
+<li><a href="https://kliansaitv.zhibozh-mgtv.com.cn/">kliansaitv.zhibozh-mgtv.com.cn</a></li>
+</ul>
+<footer>本文为经验整理，数据与方法随实践持续更新。</footer>
+</body>
+</html>
